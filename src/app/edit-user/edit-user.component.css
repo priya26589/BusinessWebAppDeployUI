@@ -1,0 +1,154 @@
+.register-business-container, .customer-register-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.business-form .form-group, .customer-form .form-group {
+  margin-bottom: 15px;
+}
+
+.business-form .form-group label, .customer-form .form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.business-form .form-group input,
+.business-form .form-group textarea,
+.business-form .form-group select,
+.customer-form .form-group input,
+.customer-form .form-group textarea,
+.customer-form .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.business-form .form-group input:focus,
+.business-form .form-group textarea:focus,
+.business-form .form-group select:focus,
+.customer-form .form-group input:focus,
+.customer-form .form-group textarea:focus,
+.customer-form .form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.business-form .form-group textarea, .customer-form .form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.submit-btn, .btn-primary {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover, .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.submit-btn:disabled, .btn-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.location-container {
+  text-align: center;
+}
+
+.location-input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+/* File Input Styling */
+.file-input {
+  display: inline-block;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* File Name Styling */
+.file-name {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Image Preview Container */
+.image-preview-container {
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  text-align: center;
+  max-width: 100%;
+}
+
+/* Image Preview */
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: contain;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.error-snackbar {
+  background-color: red;
+  color: white;
+  font-size: 16px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.login-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}

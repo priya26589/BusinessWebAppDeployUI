@@ -1,0 +1,262 @@
+<div class="container">
+ <div class="table">  
+  <div class="row">
+    <div class="col-12  text-center"><h2>Search Business</h2></div>
+  </div>
+  <div class="row">
+    <div class="col-4 col-md-3 d-flex align-items-center">Category</div>
+    <div class="col-8 col-md-6">
+      <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle cat-dropdn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ selectedCategory?.categoryName || 'Select Category' }}
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li *ngFor="let category of categories">
+        <a class="dropdown-item" (click)="selectCategory(category)">{{ category?.categoryName }}</a>
+        </li>
+      </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row"> 
+    <div class="col-4 col-md-3 d-flex align-items-center">Subcategory </div>
+    <div class="col-4 col-md-6"> 
+      <div class="dropdown ">
+        <button class="btn btn-primary dropdown-toggle cat-dropdn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ selectedSubCategory?.subCategoryName || 'Select Sub-Category' }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li *ngFor="let subcategory of subCategories">
+            <a class="dropdown-item" (click)="selectSubcategory(subcategory)">{{ subcategory?.subCategoryName }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+ </div>
+
+  <!-- Search Form -->
+  <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="search-form">
+    <input type="text" formControlName="searchQuery" placeholder="Search..." class="search-input"
+      [value]="(selectedCategory?.categoryName || '') + (selectedSubCategory ? ', ' + selectedSubCategory?.subCategoryName : '')"
+      readonly />
+
+    <button type="submit" (click)="callSearch()" class="btn-submit">Search</button>
+  </form>
+
+  <!-- Business List Table -->
+  <div class="table-responsive">
+    <table *ngIf="isTableVisible" class="business-table">
+      <thead>
+        <tr>
+          <th class="input-box">Name</th>
+          <th style="text-align: center;">Description</th>
+          <!-- <th>Visiting Card</th> -->
+          <!-- <th>New Latitude</th> -->
+          <th style="text-align: center;">Address</th>
+          <th style="text-align: center;">
+            <button class="sort-button" (click)="toggleSortDistance()">
+              Distance (KM)
+              <span *ngIf="distanceAscending">&#8593;</span> 
+              <span *ngIf="!distanceAscending">&#8595;</span>
+            </button>
+          </th>
+          <th style="text-align: center;">
+            <button class="sort-button" (click)="toggleSortRating()">
+              Rating
+              <span *ngIf="ratingAscending">&#8593;</span>
+              <span *ngIf="!ratingAscending">&#8595;</span>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let business of businessList && paginatedBusinesses">
+          <td>
+            <!-- <a href="javascript:void(0)" (click)="openPopup(business)">{{ business.name }}</a> -->
+            <a href="javascript:void(0)"
+              (click)="getBusinessDetailById(business.businessID,business.distancekm);getRating(business.businessID)">{{
+              business.name }}</a>
+          </td>
+          <td class="wrap-text">{{ business.description }}</td>
+          <!-- <td>
+          <img [src]="getImageUrl(business.visitingCard)" class="visiting-card" />
+        </td> -->
+          <td class="wrap-text">
+            {{ business.location }}
+          </td>
+          <!-- <td>          
+          {{ business.longitude }} 
+       </td> -->
+          <td>{{ business.distancekm }}</td>
+          <td>
+            <div style="text-align: left;"> <span *ngFor="let star of [].constructor(maxStars); let i = index"
+                class="material-icons material-icon-size" [ngClass]="{'filled': i < business?.averageRating}"
+                aria-disabled="true">
+                star
+              </span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <p *ngIf="latitudeDifference !== null">Latitude Difference: {{ latitudeDifference.toFixed(2) }}</p>
+          <p *ngIf="longitudeDifference !== null">Longitude Difference: {{ longitudeDifference.toFixed(2) }}</p>
+        </tr>
+
+      </tbody>
+    </table>
+    <p *ngIf="isTableVisible && businessList.length === 0" class="no-records-message">
+      No records found
+    </p>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="isPaginationVisible" class="pagination">
+    <button (click)="goToFirstPage()" [disabled]="currentPage === 1">First</button>
+    <button id="previous-button" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span id="page-display">Page {{ currentPage }} of {{ totalPages }}</span>
+    <button id="next-button" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last</button>
+  </div>
+</div>
+
+<div class="popup-overlay" *ngIf="selectedBusiness" (click)="closePopup()"></div>
+<!-- Popup/Modal -->
+<div class="popup business-popup" *ngIf="selectedBusiness" cdkTrapFocus>
+  <!-- Close Button -->
+  <div class="popup-content">
+    <span class="close" (click)="closePopup()">&times;</span>
+    <!-- Business Details -->
+    <h2 class="popup-title">Business Details</h2>
+
+    <div class="business-details">
+      <div class="detail-item">
+        <span class="label">Name:</span>
+        <span class="value">{{ selectedBusiness.name }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Description:</span>
+        <span class="value">{{ selectedBusiness.description }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Distance:</span>
+        <span class="value">{{ selectedBusiness.distancekm }} KM</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Visiting Card:</span>
+        <span class="value">
+          <img [src]="getImageUrl(selectedBusiness.visitingCard)" class="visiting-card"
+            (click)="openModal(getImageUrl(selectedBusiness.visitingCard))" />
+        </span>
+      </div>
+      <!-- Popup Modal -->
+      <div class="modal" *ngIf="isModalOpen" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <span class="close" (click)="closeModal()">&times;</span>
+          <img [src]="modalImageUrl" class="full-image" />
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="row" style="margin-left:10px;" *ngIf="roleID=='2'">
+      <!--Add Comment Start-->
+      <div class="col-sm-12 col-md-11 col-lg-11">
+        <div class="card bg-light card-top ">
+          <header class="card-header border-0 bg-transparent card-textalign">
+            <a class="fw-semibold text-decoration-none">{{emailId }}</a>
+            <div class="star-container">
+              <span *ngFor="let star of [].constructor(maxStars); let i = index" (click)="setRating(i + 1)"
+                class="material-icons material-icon-size1" [ngClass]="{'filled': i < rating}">
+                star
+              </span>
+              <div *ngIf="ratingErrorMessage" class="text-danger">Rating is required</div>
+            </div>
+            <!-- <span class="ms-3 small text-muted">2 months ago</span> -->
+          </header>
+          <div class="card-body py-1">
+            <form>
+              <div>
+                <!-- <label for="exampleFormControlTextarea1"  ngclass="visually-hidden">
+               Comment</label
+             > -->
+                <textarea class="form-control form-control-sm border border-2 rounded-1"
+                  id="exampleFormControlTextarea1" style="height: 50px" placeholder="Add a comment..." type="text"
+                  [(ngModel)]="ratingComment" [ngModelOptions]=" 
+               {standalone: true}" minlength="3" maxlength="255" required></textarea>
+              </div>
+            </form>
+          </div>
+          <footer class="card-footer bg-transparent border-0 text-end">
+            <button class="btn btn-link btn-sm me-2 text-decoration-none" (click)="clearRating()">
+              Clear
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm" (click)="submitRating(selectedBusiness)">
+              Submit
+            </button>
+          </footer>
+        </div>
+
+      </div>
+    </div>
+    <div class="row" style="margin-left:10px;" *ngIf="buisnessRatingList?.length>0">
+      <div class="col-sm-12 col-md-11 col-lg-11">
+        <aside class="d-flex justify-content-between align-items-center my-4">
+          <h4 class="h6">{{buisnessRatingList?.length}} Comments</h4>
+        </aside>
+
+        <article class="card bg-light" *ngFor="let buisnessRat of  buisnessRatingList">
+          <header class="card-header border-0 bg-transparent d-flex align-items-center">
+            <div>
+              <a class="fw-semibold text-decoration-none">{{buisnessRat?.ratedBy}} </a>
+              <span style="padding-left:10px">{{buisnessRat?.dateTime|date: 'dd/MM/yyyy'}}</span>
+              <div style="text-align: left;"> <span *ngFor="let star of [].constructor(maxStars); let i = index"
+                  class="material-icons material-icon-size1" [ngClass]="{'filled': i < buisnessRat?.rating}"
+                  aria-disabled="true">
+                  star
+                </span></div>
+            </div>
+            <div class="dropdown ms-auto">
+              <button class="btn btn-link text-decoration-none" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Report</a></li>
+              </ul>
+            </div>
+          </header>
+          <div class="card-body py-2 px-3" style="text-align:left">
+            {{buisnessRat?.comment}}
+          </div>
+
+          <br>
+        </article>
+        <!-- <div class="card-body py-2 px-3" style="text-align:left">
+            <span class="label">Location:</span>
+            <google-map class="map-container" [center]="center" [zoom]="zoom" (mapClick)="onMapClick($event)">
+              <map-marker *ngIf="marker" [position]="marker"></map-marker>
+            </google-map>
+          </div>
+          <div class="card-body py-2 px-3" style="text-align:left">
+            <span class="label">Enter Location:</span>
+            <input type="text" class="form-control" id="location" [(ngModel)]="selectedBusiness.location"
+            placeholder="Enter location manually" (change)="onLocationInput()" />
+          </div> -->
+        <div class="form-group">
+          <label for="location"></label>
+          <div class="map-container" style="height: 268px;">
+            <google-map height="400px" width="100%" style="width: 100vw;" [center]="center" [zoom]="zoom"
+              (mapClick)="onMapClick($event)">
+              <map-marker *ngIf="marker" [position]="marker"></map-marker>
+            </google-map>
+          </div>
+          <input type="text" class="form-control" id="location" [(ngModel)]="selectedBusiness.location"
+            placeholder="Enter location manually" (change)="onLocationInput()" disabled="true" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

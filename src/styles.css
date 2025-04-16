@@ -1,1 +1,69 @@
-/* You can add global styles to this file, and also import other style files */
+.header{
+    width: 100%;
+    background-color: lightblue;
+    height: 40px;
+}
+.footer{
+  width: 100%;
+  bottom: 0px !important;
+  background-color:rgb(140 203 223);
+  height: 40px;
+  position: fixed;
+}
+
+.footer-style{
+ text-align: right;
+ font-weight:600;
+ font-style: italic;
+ margin-top: 5px;
+}
+
+.menulink{
+    padding:5px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+}
+
+.error{
+    color: red;
+}
+
+.sucess{
+    color: green;
+}
+
+body {
+    background-image: url('https://img.freepik.com/free-photo/business-partners-handshake-global-corporate-with-technology-concept_53876-102615.jpg'); /* Path to the background image */
+    background-size: cover;  
+    background-position: center;  
+    background-repeat: no-repeat; 
+    height: 100vh; 
+    background-attachment: fixed;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .app-header {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    height: 150px;            
+    background-color: #333;  
+    padding: 10px;
+    justify-content: space-between;
+  }  
+  
+  .logo-container {
+    height: 100px;
+    justify-content: left; 
+  }
+  
+  .app-logo {
+    height: 43px;  
+    width: auto;   
+  }

@@ -1,0 +1,95 @@
+<div class="customer-register-container">
+  <h1>Register Customer</h1>
+  <form [formGroup]="cusRegisterForm" (ngSubmit)="submit()" class="customer-form">
+    <!-- Go to Login Link -->
+    <div class="login-link">
+      <p>Already have an account? <a [routerLink]="['/login']" class="link">Login here</a></p>     
+    </div>
+    <!-- Email Field -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        class="form-control" 
+        formControlName="Cus_EmailId" 
+        autocomplete="off" 
+        (blur)="checkEmail()"
+        placeholder="Enter your email">
+        <p *ngIf="emailExists" style="color: red;">
+          This email is already registered.
+        </p>
+      <div *ngIf="emailID?.touched && emailID?.invalid" class="error">
+        <small *ngIf="emailID?.hasError('required')">Email is required.</small>
+        <small *ngIf="emailID?.hasError('email')">Please enter a valid email address.</small>
+      </div>
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input 
+        type="password" 
+        id="password" 
+        class="form-control" 
+        formControlName="Cus_Password" 
+        placeholder="Enter your password" maxlength="20">
+      <div *ngIf="password?.touched && password?.invalid" class="error">
+        <small *ngIf="password?.hasError('required')">Password is required.</small>
+        <small *ngIf="password?.hasError('minlength')">Password must be at least 3 characters long.</small>
+      </div>
+    </div>
+
+    <!-- Location Field -->
+    <div class="form-group">
+      <label for="location">Location</label>
+      <div class="map-container">
+        <google-map 
+          height="400px" 
+          width="100%" 
+          [center]="center" 
+          [zoom]="zoom" 
+          (mapClick)="onMapClick($event)">
+          <map-marker *ngIf="marker" [position]="marker"></map-marker>
+        </google-map>
+      </div>
+      <input 
+        type="text" 
+        id="location" 
+        class="form-control mt-3" 
+        formControlName="Cus_Location" 
+        placeholder="Enter location manually"
+        (change)="onLocationInput()">
+      <div *ngIf="cusRegisterForm.get('Cus_Location')?.touched && cusRegisterForm.get('Cus_Location')?.invalid" class="error">
+        <small *ngIf="cusRegisterForm.get('Cus_Location')?.hasError('required')">Location is required.</small>
+      </div>
+    </div>
+
+    <!-- Latitude Field -->
+    <div class="form-group">
+      <!-- <label for="latitude">Latitude</label> -->
+      <input 
+        type="text" 
+        id="latitude" 
+        class="form-control" 
+        formControlName="Latitude"  [hidden]="isHidden"
+        readonly 
+        placeholder="Latitude will appear here">
+    </div>
+
+    <!-- Longitude Field -->
+    <div class="form-group">
+      <!-- <label for="longitude">Longitude</label> -->
+      <input 
+        type="text" 
+        id="longitude" 
+        class="form-control" 
+        formControlName="Longitude" [hidden]="isHidden"
+        readonly 
+        placeholder="Longitude will appear here">
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="submit-btn mb-5" [disabled]="cusRegisterForm.invalid">Register Customer</button>
+  </form>
+</div>

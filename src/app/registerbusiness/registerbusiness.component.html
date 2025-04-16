@@ -1,0 +1,188 @@
+<div class="register-business-container">
+  <h1>Register Business</h1>
+
+  <form [formGroup]="registerForm" (ngSubmit)="submit()" class="business-form">   
+      <!-- Go to Login Link -->
+    <div class="login-link">
+      <p>Already have an account? <a [routerLink]="['/login']" class="link">Login Here</a></p>    
+    </div>
+     <!-- Name -->
+    <div class="form-group">
+      <label for="name">Business Name</label>
+      <input
+        id="name"
+        type="text"
+        autocomplete="off"
+        formControlName="Name"
+        placeholder="Enter business name"
+        autocomplete="off"
+        maxlength="20"
+      />
+      <div *ngIf="registerForm.get('Name')?.touched && registerForm.get('Name')?.invalid" class="error">
+        <small *ngIf="registerForm.get('Name')?.hasError('required')">Business name is required.</small>
+        <small *ngIf="registerForm.get('Name')?.hasError('minlength')">Business name must be at least 3 characters long.</small>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email ID</label>
+      <input
+        type="email"
+        class="form-control"
+        formControlName="EmailId"
+        placeholder="Enter email address"
+        autocomplete="off"
+        (blur)="checkEmail()"
+      />
+      <p *ngIf="emailExists" style="color: red;">
+        This email is already registered.
+      </p>
+      <div *ngIf="emailID?.touched && emailID?.invalid" class="error">
+        <small *ngIf="emailID?.hasError('required')">Email is required.</small>
+        <small *ngIf="emailID?.hasError('email')">Please enter a valid email address.</small>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="Password"
+        placeholder="Enter business password" maxlength="20"
+      />
+      <div *ngIf="registerForm.get('Password')?.touched && registerForm.get('Password')?.invalid" class="error">
+        <small *ngIf="registerForm.get('Password')?.hasError('required')">Password is required.</small>
+        <small *ngIf="registerForm.get('Password')?.hasError('minlength')">Password must be at least 6 characters long.</small>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        formControlName="Description"
+        placeholder="Describe your business"
+      ></textarea>
+      <div *ngIf="registerForm.get('Description')?.touched && registerForm.get('Description')?.invalid" class="error">
+        <small *ngIf="registerForm.get('Description')?.hasError('required')">Description is required.</small>
+        <small *ngIf="registerForm.get('Description')?.hasError('maxlength')">Description cannot exceed 500 characters.</small>
+      </div>
+    </div>
+
+    <!-- Location Field -->
+    <div class="form-group">
+      <label for="location">Select Location</label>
+      <div class="map-container">
+        <google-map
+          height="400px"
+          width="100%"
+          [center]="center"
+          [zoom]="zoom"
+          (mapClick)="onMapClick($event)"
+        >
+          <map-marker *ngIf="marker" [position]="marker"></map-marker>
+        </google-map>
+      </div>
+      <input
+        type="text"
+        class="form-control mt-3"
+        id="location"
+        formControlName="location"
+        placeholder="Enter location manually"
+        (change)="onLocationInput()"
+      />
+      <small *ngIf="registerForm.get('location')?.invalid && (registerForm.get('location')?.dirty || registerForm.get('location')?.touched)" class="error">
+        Location is required.
+      </small>
+    </div>
+
+    <!-- Latitude Field -->
+    <div class="form-group">
+      <!-- <label for="latitude">Latitude</label> -->
+      <input
+        type="text"
+        id="latitude"
+        class="form-control"
+        formControlName="Latitude"[hidden]="isHidden"
+        readonly
+        placeholder="Latitude will appear here"
+      />
+    </div>
+
+    <!-- Longitude Field -->
+    <div class="form-group">
+      <!-- <label for="longitude">Longitude</label> -->
+      <input
+        type="text"
+        id="longitude"
+        class="form-control"
+        formControlName="Longitude"  [hidden]="isHidden"
+        readonly
+        placeholder="Longitude will appear here"
+      />
+    </div>
+
+    <!-- Category -->
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select
+        id="category"
+        class="form-control"
+        (change)="onCategoryChange($event)"
+        formControlName="CategoryID"
+      >
+        <option *ngFor="let category of categories" [value]="category.categoryID">
+          {{ category.categoryName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- SubCategory -->
+    <div class="form-group">
+      <label for="subCategory">SubCategory</label>
+      <select
+        id="subCategory"
+        class="form-control"
+        (change)="onSubCategoryChange($event)"
+        formControlName="SubCategoryID"
+      >
+        <option *ngFor="let subcategory of subCategories" [value]="subcategory.subCategoryID">
+          {{ subcategory.subCategoryName }}
+        </option>
+       
+      </select>
+      <small *ngIf="registerForm.get('SubCategoryID')?.invalid && (registerForm.get('SubCategoryID')?.dirty || registerForm.get('SubCategoryID')?.touched)" class="error">
+        SubCategory is required.
+      </small>
+    </div>
+
+    <!-- Visiting Card Upload -->
+    <div class="form-group">
+      <label for="imageUpload" class="file-upload-label">Upload Visiting Card</label>
+      <input
+        type="file"
+        id="imageUpload"
+        (change)="onImageUpload($event)"
+        accept="image/*"
+        class="form-control"
+      />
+      <!-- Image Preview -->
+      <div *ngIf="imagePreview" class="image-preview-container">
+        <img [src]="imagePreview" alt="Image Preview" class="image-preview" />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="submit-btn btn btn-primary mb-5"
+      [disabled]="registerForm.invalid"
+    >
+      Register Business
+    </button>
+  </form>
+</div>

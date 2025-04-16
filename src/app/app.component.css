@@ -1,0 +1,50 @@
+
+.user-profile-container {
+    position: relative;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+  
+  .user-icon {
+    cursor: pointer;
+  }
+  
+  .profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+
+  .dropdown-menu p {
+    word-wrap: break-word;
+    /* Allows email ID to wrap when it's too long */
+    white-space: normal;
+    /* Ensures text breaks to the next line when necessary */
+  }
+  
+  .dropdown-item {
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    display: block;
+    transition: background 0.3s;
+  }
+  
+  .dropdown-item:hover {
+    background: #f0f0f0;
+  }
+  

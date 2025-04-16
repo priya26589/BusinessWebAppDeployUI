@@ -1,0 +1,64 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form">
+    <h2 class="form-title">Login</h2>
+
+    <!-- Username Field -->
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        autocomplete="off"
+        placeholder="Enter your username"
+        class="form-control"
+      />
+      <div *ngIf="username?.invalid && (username?.dirty || username?.touched)" class="form-error">
+        <small *ngIf="username?.errors?.['required']">Username is required.</small>
+      </div>
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+      [type]="showPassword ? 'text' : 'password'"
+      id="password"
+      formControlName="password"
+      placeholder="Enter your password"
+      class="form-control"
+      />     
+      <button type="button" class="eye-icon" (click)="togglePasswordVisibility()">
+        <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+      </button>
+      <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="form-error">
+        <small *ngIf="password?.errors?.['required']">Password is required.</small>
+        <small *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters.</small>
+      </div>
+      <!-- Forgot Password Link -->
+      <div class="forgot-password-link">
+        <a [routerLink]="['/Forgot-password']" class="link">Forgot Password?</a>
+      </div> 
+    </div>
+
+    <!-- Register Links -->
+    <div class="form-links">
+      <p>Register as</p>
+      <a [routerLink]="['/Registerbusiness']" class="link">Business</a>
+      <a class="separator">|</a>
+      <a [routerLink]="['/Customerregistration']" class="link">Customer</a>      
+    </div>
+
+    <!-- Submit Button -->
+    <div class="button-container">
+      <button type="submit" [disabled]="isButtonDisabled" class="btn-submit">
+        Login
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>
