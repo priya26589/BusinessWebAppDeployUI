@@ -115,3 +115,8 @@
     text-decoration: underline;
   }
   
+  .alert-label {
+    color: red;
+    font-weight: bold;
+  }
+  
