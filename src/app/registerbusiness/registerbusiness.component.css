@@ -146,3 +146,8 @@ max-width: 100%;
     text-decoration: underline;
   }
   
+  .alert-label {
+    color: red;
+    font-weight: bold;
+  }
+  
